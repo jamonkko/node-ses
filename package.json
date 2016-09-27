@@ -2,20 +2,23 @@
   "author": "Aaron Heckmann <aaron.heckmann+github@gmail.com>",
   "contributors": [
     "Mark Stosberg <mark@rideamigos.com> http://mark.stosberg.com",
-    "Joshua Thomas <joshua.thomas+github@gmail.com> http://github.com/brozeph"
+    "Joshua Thomas <joshua.thomas+github@gmail.com> http://github.com/brozeph",
+    "Haoliang Yu <haoliang.yu@outlook.com>"
   ],
   "license": "MIT",
-  "description": "Simple Email Sender for Amazon SES with good docs and error handling",
+  "description": "Simple Email Sender for Amazon SES with any promise",
   "keywords": [
     "amazon",
     "aws",
     "ses",
     "email",
     "sendmail",
-    "amazon-ses"
+    "amazon-ses",
+    "promise",
+    "any-promise"
   ],
-  "name": "node-ses",
-  "version": "2.0.0",
+  "name": "node-ses-any-promise",
+  "version": "0.0.1",
   "repository": {
     "url": "https://github.com/aheckmann/node-ses.git"
   },
