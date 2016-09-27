@@ -315,15 +315,16 @@ describe('sendEmail', function(){
     it('should callback an error', function(done){
       this.timeout(20000);
       var calledTimes = 0;
-      email.send(function (err) {
-        calledTimes++;
-        assert.equal(calledTimes,1,'callback was called only once');
-        assert(err);
-        assert(err.Message);
-        assert(/^The security token included in the request is invalid/.test(err.Message));
-        // Wait to see if the code is accidentally going to run the test before declaring done.
-        setTimeout(done,1000);
-      });
+      email.send()
+        .catch(function(err) {
+          calledTimes++;
+          assert.equal(calledTimes,1,'callback was called only once');
+          assert(err);
+          assert(err.Message);
+          assert(/^The security token included in the request is invalid/.test(err.Message));
+          // Wait to see if the code is accidentally going to run the test before declaring done.
+          setTimeout(done,1000);
+        });
     });
 
     if (process.env.NODE_SES_KEY && process.env.NODE_SES_SECRET && process.env.NODE_SES_EMAIL) {
@@ -343,8 +344,12 @@ describe('sendEmail', function(){
           , cc: process.env.NODE_SES_EMAIL
           , bcc: process.env.NODE_SES_EMAIL
           , replyTo: process.env.NODE_SES_EMAIL
-        }, function (err, data) {
+        })
+        .then(function(data) {
           assert(!err);
+          done();
+        })
+        .catch(function(err) {
           assert(data);
           done();
         });
@@ -360,7 +365,8 @@ describe('_processResponse', function () {
 
   it('should errback with error Type:NodeSesInternal error if there is an error with the HTTP response', function(done) {
       // For now, the 'message' is being returned as object, but #34 is expected to make a string
-      email._processResponse({ message: 'BOOM'}, undefined, undefined, function (error) {
+      email._processResponse({ message: 'BOOM'}, undefined, undefined)
+        .catch(function(error) {
           assert.deepEqual(error, {
             Type: 'NodeSesInternal',
             Code: 'RequestError',
@@ -369,21 +375,22 @@ describe('_processResponse', function () {
             }
           });
           done();
-      })
+        })
   });
 
 	// Here we return Error objects in message, but #34 will change this to strings.
   it('Should errback with Type:NodeSesInternal/Code:ParseError if error response cannot be parsed as XML', function (done) {
       var res = { statusCode : 500 };
       var data = 'BOOM';
-      email._processResponse(undefined,  res , data, function (error) {
-          assert.deepEqual(error, {
-            Type: 'NodeSesInternal',
-            Code: 'ParseError',
-            Message: new Error("Non-whitespace before first tag.\nLine: 0\nColumn: 1\nChar: B")
-          });
-          done();
-      })
+      email._processResponse(undefined,  res , data)
+      .catch(function(error) {
+        assert.deepEqual(error, {
+          Type: 'NodeSesInternal',
+          Code: 'ParseError',
+          Message: new Error("Non-whitespace before first tag.\nLine: 0\nColumn: 1\nChar: B")
+        });
+        done();
+      });
 
 
   });
@@ -482,7 +489,8 @@ describe('sendRawEmail', function(){
     it('should callback an error', function(done){
       this.timeout(20000);
       var calledTimes = 0;
-      email.send(function (err) {
+      email.send()
+      .catch(function(err) {
         calledTimes++;
         assert.equal(calledTimes,1,'callback was called only once');
         assert(err);
@@ -533,9 +541,13 @@ describe('sendRawEmail', function(){
             , '--_003_97DCB304C5294779BEBCFC8357FCC4D2'
             , ''
           ].join('\r\n')
-        }, function (err, data) {
-          assert(!err);
+        })
+        .then(function(data) {
           assert(data);
+          done();
+        })
+        .catch(function(err) {
+          assert(!err);
           done();
         });
       });
