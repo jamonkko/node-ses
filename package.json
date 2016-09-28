@@ -18,9 +18,9 @@
     "any-promise"
   ],
   "name": "node-ses-any-promise",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "repository": {
-    "url": "https://github.com/aheckmann/node-ses.git"
+    "url": "https://github.com/haoliangyu/node-ses-any-promise.git"
   },
   "scripts": {
     "test": "make test"
